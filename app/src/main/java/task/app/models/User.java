@@ -30,7 +30,7 @@ public class User {
     
     private String email;
 
-    private String senha;
+    private String password;
 
     @ManyToMany(mappedBy = "users")
     private Set<Board> boards = new HashSet<>();
