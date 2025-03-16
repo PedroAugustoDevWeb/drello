@@ -3,13 +3,15 @@ package task.app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletResponse;
 import task.app.models.User;
+import task.app.repository.UserRepository;
 import task.app.service.UserService;
 
 
@@ -18,6 +20,9 @@ public class AppController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
 
@@ -30,11 +35,15 @@ public class AppController {
     }
 
     @PostMapping("/login")
-    public String postLogin(@ModelAttribute User user, HttpServletResponse response) {
+    public String postLogin(@RequestParam String email, @RequestParam String password, HttpServletResponse response) {
 
-        userService.loginUser(user.getEmail(), response);
+        System.out.println(email);
 
-        return "login";
+        System.out.println(password);
+
+        userService.loginUser(email, password , response);
+
+        return "redirect:/das";
 
     }
 
@@ -51,11 +60,22 @@ public class AppController {
 
         return "redirect:/login";
 
-    
 
 
 
+    }
 
+    @GetMapping("/das")
+    public String das(@CookieValue(name = "email", defaultValue = "null") String email, Model model) {
+
+
+        User user = userRepository.findByEmail(email);
+
+        model.addAttribute("user", user);
+
+        model.addAttribute("boards", user.getBoards());
+
+        return "das";
 
     }
 

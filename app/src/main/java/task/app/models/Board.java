@@ -1,8 +1,6 @@
 package task.app.models;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -37,6 +35,8 @@ public class Board {
 
     private String description;
 
+    private int position;
+
     @ManyToOne
     private User owner;
 
@@ -46,7 +46,12 @@ public class Board {
         inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users = new HashSet<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<Lista> listas = new ArrayList<>();
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Card> cards = new HashSet<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Column> columns = new HashSet<>();
+
+
     
 }

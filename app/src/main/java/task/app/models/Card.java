@@ -33,14 +33,21 @@ public class Card {
 
     private String description;
 
-    @ManyToOne
-    private Lista lista;
+    private int position;
 
     @ManyToMany
     @JoinTable(name = "user_card",
         joinColumns = @JoinColumn(name = "card_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> usuariosResponsaveis = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "board_id", nullable = false)  // Referência ao Board
+    private Board board;
+
+    @ManyToOne
+    @JoinColumn(name = "column_id", nullable = false)
+    private Column column;
 
     
 }
